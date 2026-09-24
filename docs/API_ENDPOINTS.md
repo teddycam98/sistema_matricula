@@ -119,7 +119,18 @@ Todos los endpoints retornan una estructura estándar JSON mediante la clase `Ap
 
 ---
 
-### 8. Carreras, Periodos y Aulas
+### 8. Horarios (`/api/horarios`)
+| Método | Endpoint | Descripción |
+|---|---|---|
+| `GET` | `/api/horarios` | Lista todos los horarios (`?seccionId=1`, `?aulaId=2`) |
+| `GET` | `/api/horarios/{id}` | Obtiene horario por ID |
+| `POST`| `/api/horarios` | Asigna nuevo horario a una sección y aula |
+| `PUT` | `/api/horarios/{id}` | Actualiza horario |
+| `DELETE`| `/api/horarios/{id}` | Elimina horario |
+
+---
+
+### 9. Carreras, Periodos, Planes y Aulas
 - `/api/carreras`: CRUD de programas académicos.
 - `/api/periodos`: CRUD de semestres lectivos (2026-I, etc.).
 - `/api/aulas`: CRUD de ambientes físicos y laboratorios.
