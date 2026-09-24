@@ -9,7 +9,8 @@ let appState = {
   matriculas: [],
   cursos: [],
   docentes: [],
-  carreras: []
+  carreras: [],
+  planes: []
 };
 
 // Inicialización
@@ -24,7 +25,8 @@ async function inicializarApp() {
       cargarDashboard(),
       cargarPeriodos(),
       cargarEstudiantesSelect(),
-      cargarCarrerasSelect()
+      cargarCarrerasSelect(),
+      cargarPlanesSelect()
     ]);
   } catch (err) {
     console.warn("Error cargando datos iniciales:", err);
@@ -181,6 +183,9 @@ function renderMatriculasTable(lista) {
             <i class="fa-solid fa-ban text-sm"></i>
           </button>
         ` : ''}
+        <button onclick="eliminarMatricula(${m.id}, '${m.codigoMatricula}')" title="Eliminar Matrícula Definitivamente" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-md transition">
+          <i class="fa-solid fa-trash text-sm"></i>
+        </button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -237,6 +242,36 @@ function verDetalleMatricula(id) {
 
 function cerrarModalDetalle() {
   document.getElementById("modal-detalle-matricula").classList.add("hidden");
+}
+
+async function eliminarMatricula(id, codigo = "") {
+  const cod = codigo || `ID ${id}`;
+  if (!confirm(`¿Está seguro de que desea ELIMINAR definitivamente la matrícula ${cod}? Se liberarán las vacantes de los cursos asociados.`)) {
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/matriculas/${id}`, {
+      method: "DELETE"
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      mostrarToast(`Matrícula ${cod} eliminada exitosamente`, "success");
+      cerrarModalDetalle();
+      cargarMatriculas();
+      cargarDashboard();
+    } else {
+      mostrarToast(data.message || "Error al eliminar matrícula", "error");
+    }
+  } catch (err) {
+    mostrarToast("Error en la conexión con el servidor", "error");
+  }
+}
+
+function eliminarMatriculaModal() {
+  if (matriculaModalId) {
+    const m = appState.matriculas.find(x => x.id === matriculaModalId);
+    eliminarMatricula(matriculaModalId, m ? m.codigoMatricula : "");
+  }
 }
 
 async function anularMatricula(id) {
@@ -593,7 +628,7 @@ async function confirmarMatricula() {
   }
 }
 
-// ==================== ESTUDIANTES ====================
+// ==================== ESTUDIANTES (CRUD COMPLETO) ====================
 async function cargarEstudiantes() {
   try {
     const res = await fetch(`${API_BASE}/estudiantes`);
@@ -611,7 +646,7 @@ function renderEstudiantesTable(lista) {
   tbody.innerHTML = "";
 
   if (lista.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">No se encontraron estudiantes</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400">No se encontraron estudiantes</td></tr>`;
     return;
   }
 
@@ -626,6 +661,14 @@ function renderEstudiantesTable(lista) {
       <td class="py-3 px-4 text-slate-500 text-xs">${e.email}</td>
       <td class="py-3 px-4 text-slate-600">${e.telefono || "--"}</td>
       <td class="py-3 px-4">${renderBadgeEstado(e.estado)}</td>
+      <td class="py-3 px-4 text-center space-x-1.5 whitespace-nowrap">
+        <button onclick="editarEstudiante(${e.id})" title="Editar Estudiante" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-md transition">
+          <i class="fa-solid fa-pen-to-square text-sm"></i>
+        </button>
+        <button onclick="eliminarEstudiante(${e.id}, '${e.nombres.replace(/'/g, "\\'")} ${e.apellidos.replace(/'/g, "\\'")}')" title="Eliminar Estudiante" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-md transition">
+          <i class="fa-solid fa-trash text-sm"></i>
+        </button>
+      </td>
     `;
     tbody.appendChild(tr);
   });
@@ -649,13 +692,15 @@ async function cargarCarrerasSelect() {
       const { data } = await res.json();
       appState.carreras = data;
       const select = document.getElementById("nuevo-carrera-id");
-      select.innerHTML = '<option value="">Seleccione carrera...</option>';
-      data.forEach(c => {
-        const opt = document.createElement("option");
-        opt.value = c.id;
-        opt.textContent = `${c.nombre} (${c.facultad})`;
-        select.appendChild(opt);
-      });
+      if (select) {
+        select.innerHTML = '<option value="">Seleccione carrera...</option>';
+        data.forEach(c => {
+          const opt = document.createElement("option");
+          opt.value = c.id;
+          opt.textContent = `${c.nombre} (${c.facultad})`;
+          select.appendChild(opt);
+        });
+      }
     }
   } catch (err) {
     console.error("Error cargando carreras:", err);
@@ -663,6 +708,13 @@ async function cargarCarrerasSelect() {
 }
 
 function abrirModalNuevoEstudiante() {
+  const form = document.getElementById("form-estudiante");
+  if (form) form.reset();
+  document.getElementById("estudiante-id").value = "";
+  document.getElementById("modal-estudiante-titulo").textContent = "Registrar Nuevo Estudiante";
+  document.getElementById("btn-estudiante-text").textContent = "Guardar Alumno";
+  document.getElementById("nuevo-dni").disabled = false;
+  document.getElementById("nuevo-estado-estudiante").value = "ACTIVO";
   document.getElementById("modal-nuevo-estudiante").classList.remove("hidden");
 }
 
@@ -670,13 +722,35 @@ function cerrarModalNuevoEstudiante() {
   document.getElementById("modal-nuevo-estudiante").classList.add("hidden");
 }
 
+function editarEstudiante(id) {
+  const e = appState.estudiantes.find(x => x.id === id);
+  if (!e) return;
+
+  document.getElementById("estudiante-id").value = e.id;
+  document.getElementById("nuevo-dni").value = e.dni;
+  document.getElementById("nuevo-codigo").value = e.codigoEstudiante || "";
+  document.getElementById("nuevo-nombres").value = e.nombres;
+  document.getElementById("nuevo-apellidos").value = e.apellidos;
+  document.getElementById("nuevo-carrera-id").value = e.carrera ? e.carrera.id : "";
+  document.getElementById("nuevo-estado-estudiante").value = e.estado || "ACTIVO";
+  document.getElementById("nuevo-email").value = e.email;
+  document.getElementById("nuevo-telefono").value = e.telefono || "";
+  document.getElementById("nuevo-direccion").value = e.direccion || "";
+
+  document.getElementById("modal-estudiante-titulo").textContent = "Editar Estudiante";
+  document.getElementById("btn-estudiante-text").textContent = "Actualizar Alumno";
+  document.getElementById("modal-nuevo-estudiante").classList.remove("hidden");
+}
+
 async function guardarEstudiante(event) {
   event.preventDefault();
+  const id = document.getElementById("estudiante-id").value;
   const dni = document.getElementById("nuevo-dni").value.trim();
   const codigo = document.getElementById("nuevo-codigo").value.trim();
   const nombres = document.getElementById("nuevo-nombres").value.trim();
   const apellidos = document.getElementById("nuevo-apellidos").value.trim();
   const carreraId = document.getElementById("nuevo-carrera-id").value;
+  const estado = document.getElementById("nuevo-estado-estudiante").value;
   const email = document.getElementById("nuevo-email").value.trim();
   const telefono = document.getElementById("nuevo-telefono").value.trim();
   const direccion = document.getElementById("nuevo-direccion").value.trim();
@@ -690,111 +764,412 @@ async function guardarEstudiante(event) {
     email,
     telefono,
     direccion,
-    estado: "ACTIVO"
+    estado
   };
 
   try {
-    const res = await fetch(`${API_BASE}/estudiantes`, {
-      method: "POST",
+    const url = id ? `${API_BASE}/estudiantes/${id}` : `${API_BASE}/estudiantes`;
+    const method = id ? "PUT" : "POST";
+    const res = await fetch(url, {
+      method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
     const result = await res.json();
 
     if (res.ok && result.success) {
-      mostrarToast("Estudiante registrado exitosamente", "success");
+      mostrarToast(id ? "Estudiante actualizado exitosamente" : "Estudiante registrado exitosamente", "success");
       cerrarModalNuevoEstudiante();
       document.getElementById("form-estudiante").reset();
       cargarEstudiantes();
       cargarEstudiantesSelect();
       cargarDashboard();
     } else {
-      mostrarToast(result.message || "Error al registrar estudiante", "error");
+      mostrarToast(result.message || "Error al procesar estudiante", "error");
     }
   } catch (err) {
     mostrarToast("Error de conexión al guardar estudiante", "error");
   }
 }
 
-// ==================== CURSOS ====================
+async function eliminarEstudiante(id, nombre) {
+  if (!confirm(`¿Está seguro de que desea eliminar al estudiante "${nombre}"? Esta acción no se puede deshacer.`)) {
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/estudiantes/${id}`, {
+      method: "DELETE"
+    });
+    const result = await res.json();
+    if (res.ok && result.success) {
+      mostrarToast("Estudiante eliminado correctamente", "success");
+      cargarEstudiantes();
+      cargarEstudiantesSelect();
+      cargarDashboard();
+    } else {
+      mostrarToast(result.message || "Error al eliminar estudiante", "error");
+    }
+  } catch (err) {
+    mostrarToast("Error de conexión al eliminar estudiante", "error");
+  }
+}
+
+// ==================== CURSOS (CRUD COMPLETO) ====================
+async function cargarPlanesSelect() {
+  try {
+    const res = await fetch(`${API_BASE}/planes-estudio`);
+    if (res.ok) {
+      const { data } = await res.json();
+      appState.planes = data;
+      const select = document.getElementById("curso-plan-id");
+      if (select) {
+        select.innerHTML = '<option value="">Seleccione plan de estudio...</option>';
+        data.forEach(p => {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          const carNom = p.carrera ? ` - ${p.carrera.nombre}` : "";
+          opt.textContent = `${p.codigoPlan}${carNom}`;
+          select.appendChild(opt);
+        });
+      }
+    }
+  } catch (err) {
+    console.error("Error cargando planes de estudio:", err);
+  }
+}
+
 async function cargarCursos() {
   try {
     const res = await fetch(`${API_BASE}/cursos`);
     if (!res.ok) throw new Error("Error en solicitud");
     const { data } = await res.json();
     appState.cursos = data;
-
-    const tbody = document.getElementById("cursos-tbody");
-    tbody.innerHTML = "";
-
-    if (data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400">No hay cursos disponibles</td></tr>`;
-      return;
-    }
-
-    data.forEach(c => {
-      const tr = document.createElement("tr");
-      tr.className = "hover:bg-slate-50 transition";
-      tr.innerHTML = `
-        <td class="py-3 px-4 font-bold text-indigo-700">${c.codigo}</td>
-        <td class="py-3 px-4 font-semibold text-slate-800">${c.nombre}</td>
-        <td class="py-3 px-4 text-slate-500 text-xs">${c.planEstudio ? c.planEstudio.codigoPlan : "--"}</td>
-        <td class="py-3 px-4 text-center font-bold text-slate-700">Ciclo ${c.ciclo}</td>
-        <td class="py-3 px-4 text-center font-bold text-indigo-600">${c.creditos}</td>
-        <td class="py-3 px-4 text-center text-xs text-slate-500">${c.horasTeoria}T / ${c.horasPractica}P</td>
-        <td class="py-3 px-4 font-bold text-slate-800">S/ ${(c.costo || 0).toFixed(2)}</td>
-        <td class="py-3 px-4">${renderBadgeEstado(c.estado)}</td>
-      `;
-      tbody.appendChild(tr);
-    });
+    renderCursosTable(data);
   } catch (err) {
     mostrarToast("Error al cargar cursos", "error");
   }
 }
 
-// ==================== DOCENTES ====================
+function renderCursosTable(lista) {
+  const tbody = document.getElementById("cursos-tbody");
+  tbody.innerHTML = "";
+
+  if (lista.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" class="py-6 text-center text-slate-400">No hay cursos disponibles</td></tr>`;
+    return;
+  }
+
+  lista.forEach(c => {
+    const tr = document.createElement("tr");
+    tr.className = "hover:bg-slate-50 transition";
+    tr.innerHTML = `
+      <td class="py-3 px-4 font-bold text-indigo-700">${c.codigo}</td>
+      <td class="py-3 px-4 font-semibold text-slate-800">${c.nombre}</td>
+      <td class="py-3 px-4 text-slate-500 text-xs">${c.planEstudio ? c.planEstudio.codigoPlan : "--"}</td>
+      <td class="py-3 px-4 text-center font-bold text-slate-700">Ciclo ${c.ciclo}</td>
+      <td class="py-3 px-4 text-center font-bold text-indigo-600">${c.creditos}</td>
+      <td class="py-3 px-4 text-center text-xs text-slate-500">${c.horasTeoria}T / ${c.horasPractica}P</td>
+      <td class="py-3 px-4 font-bold text-slate-800">S/ ${(c.costo || 0).toFixed(2)}</td>
+      <td class="py-3 px-4">${renderBadgeEstado(c.estado)}</td>
+      <td class="py-3 px-4 text-center space-x-1.5 whitespace-nowrap">
+        <button onclick="editarCurso(${c.id})" title="Editar Curso" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-md transition">
+          <i class="fa-solid fa-pen-to-square text-sm"></i>
+        </button>
+        <button onclick="eliminarCurso(${c.id}, '${c.nombre.replace(/'/g, "\\'")}')" title="Eliminar Curso" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-md transition">
+          <i class="fa-solid fa-trash text-sm"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function filtrarCursos() {
+  const q = document.getElementById("filtro-cursos").value.toLowerCase().trim();
+  const res = appState.cursos.filter(c =>
+    (c.codigo && c.codigo.toLowerCase().includes(q)) ||
+    (c.nombre && c.nombre.toLowerCase().includes(q)) ||
+    (c.planEstudio && c.planEstudio.codigoPlan && c.planEstudio.codigoPlan.toLowerCase().includes(q))
+  );
+  renderCursosTable(res);
+}
+
+function abrirModalNuevoCurso() {
+  const form = document.getElementById("form-curso");
+  if (form) form.reset();
+  document.getElementById("curso-id").value = "";
+  document.getElementById("modal-curso-titulo").textContent = "Registrar Nuevo Curso";
+  document.getElementById("btn-curso-text").textContent = "Guardar Asignatura";
+  document.getElementById("curso-estado").value = "ACTIVO";
+  document.getElementById("modal-curso").classList.remove("hidden");
+}
+
+function cerrarModalCurso() {
+  document.getElementById("modal-curso").classList.add("hidden");
+}
+
+function editarCurso(id) {
+  const c = appState.cursos.find(x => x.id === id);
+  if (!c) return;
+
+  document.getElementById("curso-id").value = c.id;
+  document.getElementById("curso-codigo").value = c.codigo;
+  document.getElementById("curso-plan-id").value = c.planEstudio ? c.planEstudio.id : "";
+  document.getElementById("curso-nombre").value = c.nombre;
+  document.getElementById("curso-ciclo").value = c.ciclo;
+  document.getElementById("curso-creditos").value = c.creditos;
+  document.getElementById("curso-costo").value = c.costo;
+  document.getElementById("curso-horas-teoria").value = c.horasTeoria;
+  document.getElementById("curso-horas-practica").value = c.horasPractica;
+  document.getElementById("curso-estado").value = c.estado || "ACTIVO";
+
+  document.getElementById("modal-curso-titulo").textContent = "Editar Asignatura";
+  document.getElementById("btn-curso-text").textContent = "Actualizar Asignatura";
+  document.getElementById("modal-curso").classList.remove("hidden");
+}
+
+async function guardarCurso(event) {
+  event.preventDefault();
+  const id = document.getElementById("curso-id").value;
+  const codigo = document.getElementById("curso-codigo").value.trim();
+  const planId = document.getElementById("curso-plan-id").value;
+  const nombre = document.getElementById("curso-nombre").value.trim();
+  const ciclo = Number(document.getElementById("curso-ciclo").value);
+  const creditos = Number(document.getElementById("curso-creditos").value);
+  const costo = parseFloat(document.getElementById("curso-costo").value);
+  const horasTeoria = Number(document.getElementById("curso-horas-teoria").value);
+  const horasPractica = Number(document.getElementById("curso-horas-practica").value);
+  const estado = document.getElementById("curso-estado").value;
+
+  const payload = {
+    codigo,
+    planEstudio: { id: Number(planId) },
+    nombre,
+    ciclo,
+    creditos,
+    costo,
+    horasTeoria,
+    horasPractica,
+    estado
+  };
+
+  try {
+    const url = id ? `${API_BASE}/cursos/${id}` : `${API_BASE}/cursos`;
+    const method = id ? "PUT" : "POST";
+    const res = await fetch(url, {
+      method: method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+
+    if (res.ok && result.success) {
+      mostrarToast(id ? "Asignatura actualizada exitosamente" : "Asignatura registrada exitosamente", "success");
+      cerrarModalCurso();
+      document.getElementById("form-curso").reset();
+      cargarCursos();
+      cargarDashboard();
+    } else {
+      mostrarToast(result.message || "Error al procesar asignatura", "error");
+    }
+  } catch (err) {
+    mostrarToast("Error de conexión al guardar asignatura", "error");
+  }
+}
+
+async function eliminarCurso(id, nombre) {
+  if (!confirm(`¿Está seguro de que desea eliminar la asignatura "${nombre}"? Esta acción no se puede deshacer.`)) {
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/cursos/${id}`, {
+      method: "DELETE"
+    });
+    const result = await res.json();
+    if (res.ok && result.success) {
+      mostrarToast("Asignatura eliminada correctamente", "success");
+      cargarCursos();
+      cargarDashboard();
+    } else {
+      mostrarToast(result.message || "Error al eliminar asignatura", "error");
+    }
+  } catch (err) {
+    mostrarToast("Error de conexión al eliminar asignatura", "error");
+  }
+}
+
+// ==================== DOCENTES (CRUD COMPLETO) ====================
 async function cargarDocentes() {
   try {
     const res = await fetch(`${API_BASE}/docentes`);
     if (!res.ok) throw new Error("Error en solicitud");
     const { data } = await res.json();
     appState.docentes = data;
-
-    const container = document.getElementById("docentes-cards-container");
-    container.innerHTML = "";
-
-    data.forEach(d => {
-      const card = document.createElement("div");
-      card.className = "bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between";
-      card.innerHTML = `
-        <div>
-          <div class="flex items-start justify-between">
-            <div>
-              <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 mb-2">
-                ${d.gradoAcademico}
-              </span>
-              <h4 class="font-bold text-base text-slate-800">${d.nombres} ${d.apellidos}</h4>
-              <p class="text-xs text-indigo-600 font-medium">${d.especialidad}</p>
-            </div>
-            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 text-lg">
-              <i class="fa-solid fa-user-tie"></i>
-            </div>
-          </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 space-y-1 text-xs text-slate-500">
-            <p><i class="fa-solid fa-id-card w-4 text-slate-400"></i> DNI: <span class="font-semibold text-slate-700">${d.dni}</span></p>
-            <p><i class="fa-solid fa-envelope w-4 text-slate-400"></i> ${d.email}</p>
-            <p><i class="fa-solid fa-phone w-4 text-slate-400"></i> ${d.telefono || "--"}</p>
-          </div>
-        </div>
-        <div class="mt-4 pt-2 flex justify-between items-center text-xs">
-          <span class="text-slate-400">Estado</span>
-          ${renderBadgeEstado(d.estado)}
-        </div>
-      `;
-      container.appendChild(card);
-    });
+    renderDocentesCards(data);
   } catch (err) {
     mostrarToast("Error al cargar docentes", "error");
+  }
+}
+
+function renderDocentesCards(lista) {
+  const container = document.getElementById("docentes-cards-container");
+  container.innerHTML = "";
+
+  if (lista.length === 0) {
+    container.innerHTML = `<div class="col-span-3 py-6 text-center text-slate-400">No se encontraron docentes registrados</div>`;
+    return;
+  }
+
+  lista.forEach(d => {
+    const card = document.createElement("div");
+    card.className = "bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between";
+    card.innerHTML = `
+      <div>
+        <div class="flex items-start justify-between">
+          <div>
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 mb-2">
+              ${d.gradoAcademico}
+            </span>
+            <h4 class="font-bold text-base text-slate-800">${d.nombres} ${d.apellidos}</h4>
+            <p class="text-xs text-indigo-600 font-medium">${d.especialidad}</p>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 text-lg">
+            <i class="fa-solid fa-user-tie"></i>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 space-y-1 text-xs text-slate-500">
+          <p><i class="fa-solid fa-id-card w-4 text-slate-400"></i> DNI: <span class="font-semibold text-slate-700">${d.dni}</span></p>
+          <p><i class="fa-solid fa-envelope w-4 text-slate-400"></i> ${d.email}</p>
+          <p><i class="fa-solid fa-phone w-4 text-slate-400"></i> ${d.telefono || "--"}</p>
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
+        <div class="flex items-center space-x-1.5">
+          <span class="text-slate-400">Estado:</span>
+          ${renderBadgeEstado(d.estado)}
+        </div>
+        <div class="flex items-center space-x-1">
+          <button onclick="editarDocente(${d.id})" title="Editar Docente" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-md transition text-xs flex items-center font-medium">
+            <i class="fa-solid fa-pen-to-square mr-1"></i> Editar
+          </button>
+          <button onclick="eliminarDocente(${d.id}, '${d.nombres.replace(/'/g, "\\'")} ${d.apellidos.replace(/'/g, "\\'")}')" title="Eliminar Docente" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-md transition text-xs flex items-center font-medium">
+            <i class="fa-solid fa-trash mr-1"></i> Borrar
+          </button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function filtrarDocentes() {
+  const q = document.getElementById("filtro-docentes").value.toLowerCase().trim();
+  const res = appState.docentes.filter(d =>
+    (d.nombres && d.nombres.toLowerCase().includes(q)) ||
+    (d.apellidos && d.apellidos.toLowerCase().includes(q)) ||
+    (d.dni && d.dni.includes(q)) ||
+    (d.especialidad && d.especialidad.toLowerCase().includes(q))
+  );
+  renderDocentesCards(res);
+}
+
+function abrirModalNuevoDocente() {
+  const form = document.getElementById("form-docente");
+  if (form) form.reset();
+  document.getElementById("docente-id").value = "";
+  document.getElementById("modal-docente-titulo").textContent = "Registrar Nuevo Docente";
+  document.getElementById("btn-docente-text").textContent = "Guardar Docente";
+  document.getElementById("docente-grado").value = "Magíster";
+  document.getElementById("docente-estado").value = "ACTIVO";
+  document.getElementById("modal-docente").classList.remove("hidden");
+}
+
+function cerrarModalDocente() {
+  document.getElementById("modal-docente").classList.add("hidden");
+}
+
+function editarDocente(id) {
+  const d = appState.docentes.find(x => x.id === id);
+  if (!d) return;
+
+  document.getElementById("docente-id").value = d.id;
+  document.getElementById("docente-dni").value = d.dni;
+  document.getElementById("docente-grado").value = d.gradoAcademico || "Magíster";
+  document.getElementById("docente-nombres").value = d.nombres;
+  document.getElementById("docente-apellidos").value = d.apellidos;
+  document.getElementById("docente-especialidad").value = d.especialidad;
+  document.getElementById("docente-estado").value = d.estado || "ACTIVO";
+  document.getElementById("docente-email").value = d.email;
+  document.getElementById("docente-telefono").value = d.telefono || "";
+
+  document.getElementById("modal-docente-titulo").textContent = "Editar Docente";
+  document.getElementById("btn-docente-text").textContent = "Actualizar Docente";
+  document.getElementById("modal-docente").classList.remove("hidden");
+}
+
+async function guardarDocente(event) {
+  event.preventDefault();
+  const id = document.getElementById("docente-id").value;
+  const dni = document.getElementById("docente-dni").value.trim();
+  const gradoAcademico = document.getElementById("docente-grado").value;
+  const nombres = document.getElementById("docente-nombres").value.trim();
+  const apellidos = document.getElementById("docente-apellidos").value.trim();
+  const especialidad = document.getElementById("docente-especialidad").value.trim();
+  const estado = document.getElementById("docente-estado").value;
+  const email = document.getElementById("docente-email").value.trim();
+  const telefono = document.getElementById("docente-telefono").value.trim();
+
+  const payload = {
+    dni,
+    gradoAcademico,
+    nombres,
+    apellidos,
+    especialidad,
+    estado,
+    email,
+    telefono
+  };
+
+  try {
+    const url = id ? `${API_BASE}/docentes/${id}` : `${API_BASE}/docentes`;
+    const method = id ? "PUT" : "POST";
+    const res = await fetch(url, {
+      method: method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+
+    if (res.ok && result.success) {
+      mostrarToast(id ? "Docente actualizado exitosamente" : "Docente registrado exitosamente", "success");
+      cerrarModalDocente();
+      document.getElementById("form-docente").reset();
+      cargarDocentes();
+    } else {
+      mostrarToast(result.message || "Error al procesar docente", "error");
+    }
+  } catch (err) {
+    mostrarToast("Error de conexión al guardar docente", "error");
+  }
+}
+
+async function eliminarDocente(id, nombre) {
+  if (!confirm(`¿Está seguro de que desea eliminar al docente "${nombre}"? Esta acción no se puede deshacer.`)) {
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/docentes/${id}`, {
+      method: "DELETE"
+    });
+    const result = await res.json();
+    if (res.ok && result.success) {
+      mostrarToast("Docente eliminado correctamente", "success");
+      cargarDocentes();
+    } else {
+      mostrarToast(result.message || "Error al eliminar docente", "error");
+    }
+  } catch (err) {
+    mostrarToast("Error de conexión al eliminar docente", "error");
   }
 }
 

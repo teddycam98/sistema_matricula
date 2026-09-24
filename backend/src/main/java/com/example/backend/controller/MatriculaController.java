@@ -55,4 +55,10 @@ public class MatriculaController {
         matriculaService.anularMatricula(id);
         return ResponseEntity.ok(ApiResponse.ok("Matrícula anulada exitosamente", null));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+        matriculaService.delete(id);
+        return ResponseEntity.ok(ApiResponse.ok("Matrícula eliminada exitosamente", null));
+    }
 }

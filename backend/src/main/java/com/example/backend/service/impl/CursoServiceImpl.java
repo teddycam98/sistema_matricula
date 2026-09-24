@@ -52,15 +52,17 @@ public class CursoServiceImpl implements ICursoService {
     @Override
     public Curso update(Long id, Curso curso) {
         Curso existing = findById(id);
-        existing.setPlanEstudio(curso.getPlanEstudio());
-        existing.setCodigo(curso.getCodigo());
-        existing.setNombre(curso.getNombre());
-        existing.setCreditos(curso.getCreditos());
-        existing.setHorasTeoria(curso.getHorasTeoria());
-        existing.setHorasPractica(curso.getHorasPractica());
-        existing.setCiclo(curso.getCiclo());
-        existing.setCosto(curso.getCosto());
-        existing.setEstado(curso.getEstado());
+        if (curso.getPlanEstudio() != null && curso.getPlanEstudio().getId() != null) {
+            existing.setPlanEstudio(curso.getPlanEstudio());
+        }
+        if (curso.getCodigo() != null) existing.setCodigo(curso.getCodigo());
+        if (curso.getNombre() != null) existing.setNombre(curso.getNombre());
+        if (curso.getCreditos() != null) existing.setCreditos(curso.getCreditos());
+        if (curso.getHorasTeoria() != null) existing.setHorasTeoria(curso.getHorasTeoria());
+        if (curso.getHorasPractica() != null) existing.setHorasPractica(curso.getHorasPractica());
+        if (curso.getCiclo() != null) existing.setCiclo(curso.getCiclo());
+        if (curso.getCosto() != null) existing.setCosto(curso.getCosto());
+        if (curso.getEstado() != null) existing.setEstado(curso.getEstado());
         return cursoRepository.save(existing);
     }
 

@@ -67,16 +67,18 @@ public class EstudianteServiceImpl implements IEstudianteService {
     @Override
     public Estudiante update(Long id, Estudiante estudiante) {
         Estudiante existing = findById(id);
-        existing.setCarrera(estudiante.getCarrera());
-        existing.setDni(estudiante.getDni());
-        existing.setCodigoEstudiante(estudiante.getCodigoEstudiante());
-        existing.setNombres(estudiante.getNombres());
-        existing.setApellidos(estudiante.getApellidos());
-        existing.setEmail(estudiante.getEmail());
-        existing.setTelefono(estudiante.getTelefono());
-        existing.setFechaNacimiento(estudiante.getFechaNacimiento());
-        existing.setDireccion(estudiante.getDireccion());
-        existing.setEstado(estudiante.getEstado());
+        if (estudiante.getCarrera() != null && estudiante.getCarrera().getId() != null) {
+            existing.setCarrera(estudiante.getCarrera());
+        }
+        if (estudiante.getDni() != null) existing.setDni(estudiante.getDni());
+        if (estudiante.getCodigoEstudiante() != null) existing.setCodigoEstudiante(estudiante.getCodigoEstudiante());
+        if (estudiante.getNombres() != null) existing.setNombres(estudiante.getNombres());
+        if (estudiante.getApellidos() != null) existing.setApellidos(estudiante.getApellidos());
+        if (estudiante.getEmail() != null) existing.setEmail(estudiante.getEmail());
+        if (estudiante.getTelefono() != null) existing.setTelefono(estudiante.getTelefono());
+        if (estudiante.getFechaNacimiento() != null) existing.setFechaNacimiento(estudiante.getFechaNacimiento());
+        if (estudiante.getDireccion() != null) existing.setDireccion(estudiante.getDireccion());
+        if (estudiante.getEstado() != null) existing.setEstado(estudiante.getEstado());
         return estudianteRepository.save(existing);
     }
 

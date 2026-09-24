@@ -197,6 +197,26 @@ public class MatriculaServiceImpl implements IMatriculaService {
         matriculaRepository.save(matricula);
     }
 
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        Matricula matricula = matriculaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Matrícula no encontrada con ID: " + id));
+
+        // Liberar vacantes si no estaba previamente anulada
+        if (!"ANULADA".equalsIgnoreCase(matricula.getEstado())) {
+            for (DetalleMatricula detalle : matricula.getDetalles()) {
+                Seccion seccion = detalle.getSeccion();
+                if (seccion != null && seccion.getMatriculados() > 0) {
+                    seccion.setMatriculados(seccion.getMatriculados() - 1);
+                    seccionRepository.save(seccion);
+                }
+            }
+        }
+
+        matriculaRepository.delete(matricula);
+    }
+
     private String generarCodigoMatricula(String periodoCodigo) {
         String base = "MAT-" + periodoCodigo.replace("-", "") + "-";
         long count = matriculaRepository.count() + 1;

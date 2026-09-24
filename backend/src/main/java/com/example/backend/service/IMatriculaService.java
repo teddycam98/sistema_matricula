@@ -12,4 +12,5 @@ public interface IMatriculaService {
     List<MatriculaResponseDTO> findByEstudianteId(Long estudianteId);
     MatriculaResponseDTO registrarMatricula(MatriculaRequestDTO request);
     void anularMatricula(Long id);
+    void delete(Long id);
 }
