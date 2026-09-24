@@ -135,3 +135,12 @@ Todos los endpoints retornan una estructura estándar JSON mediante la clase `Ap
 - `/api/periodos`: CRUD de semestres lectivos (2026-I, etc.).
 - `/api/aulas`: CRUD de ambientes físicos y laboratorios.
 - `/api/planes-estudio`: CRUD de planes curriculares.
+
+---
+
+### 10. Reportes Oficiales en PDF (JasperReports)
+| Método | Endpoint | Retorno | Descripción |
+|---|---|---|---|
+| `GET` | `/api/reportes/matricula/{id}/pdf` | `application/pdf` | Genera y descarga la Ficha Oficial de Matrícula en PDF para el estudiante especificado. |
+| `GET` | `/api/reportes/matriculas/pdf` | `application/pdf` | Reporte ejecutivo consolidado de todas las matrículas registradas. |
+| `GET` | `/api/reportes/estudiantes/pdf` | `application/pdf` | Padrón oficial de estudiantes por carrera y correo institucional. |

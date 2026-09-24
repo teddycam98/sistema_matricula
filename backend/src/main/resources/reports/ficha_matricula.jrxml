@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio / JasperReports Library version 6.21.3 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="ficha_matricula" 
+              pageWidth="595" 
+              pageHeight="842" 
+              columnWidth="555" 
+              leftMargin="20" 
+              rightMargin="20" 
+              topMargin="20" 
+              bottomMargin="20" 
+              uuid="b1f3c3a4-8f2e-4e9b-9a8c-7d6e5f4a3b2c">
+
+    <!-- Parámetros del Reporte -->
+    <parameter name="P_CODIGO_MATRICULA" class="java.lang.String"/>
+    <parameter name="P_ESTUDIANTE_NOMBRE" class="java.lang.String"/>
+    <parameter name="P_ESTUDIANTE_DNI" class="java.lang.String"/>
+    <parameter name="P_ESTUDIANTE_CODIGO" class="java.lang.String"/>
+    <parameter name="P_CARRERA" class="java.lang.String"/>
+    <parameter name="P_PERIODO" class="java.lang.String"/>
+    <parameter name="P_TOTAL_CREDITOS" class="java.lang.Integer"/>
+    <parameter name="P_COSTO_TOTAL" class="java.math.BigDecimal"/>
+    <parameter name="P_ESTADO" class="java.lang.String"/>
+    <parameter name="P_FECHA_EMISION" class="java.lang.String"/>
+
+    <!-- Campos de los Cursos (DataSource) -->
+    <field name="cursoCodigo" class="java.lang.String"/>
+    <field name="cursoNombre" class="java.lang.String"/>
+    <field name="codigoSeccion" class="java.lang.String"/>
+    <field name="docenteNombre" class="java.lang.String"/>
+    <field name="creditos" class="java.lang.Integer"/>
+    <field name="costoCurso" class="java.math.BigDecimal"/>
+
+    <!-- Título / Encabezado -->
+    <title>
+        <band height="150" splitType="Stretch">
+            <!-- Rectángulo de fondo superior -->
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="60" backcolor="#1E3A8A" uuid="a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="10" y="8" width="535" height="24" forecolor="#FFFFFF" uuid="d1e2f3a4-b5c6-7d8e-9f0a-1b2c3d4e5f6a"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[UNIVERSIDAD NACIONAL DE TECNOLOGÍA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="10" y="32" width="535" height="18" forecolor="#E0E7FF" uuid="e2f3a4b5-c6d7-8e9f-0a1b-2c3d4e5f6a7b"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="12" isBold="false"/>
+                </textElement>
+                <text><![CDATA[OFICINA CENTRAL DE REGISTROS Y MATRÍCULA ACADÉMICA]]></text>
+            </staticText>
+
+            <!-- Título de la Ficha -->
+            <staticText>
+                <reportElement x="0" y="70" width="350" height="22" forecolor="#1E3A8A" uuid="f3a4b5c6-d7e8-9f0a-1b2c-3d4e5f6a7b8c"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[CONSTANCIA OFICIAL DE MATRÍCULA]]></text>
+            </staticText>
+
+            <textField>
+                <reportElement x="350" y="70" width="205" height="22" forecolor="#DC2626" uuid="a4b5c6d7-e8f9-0a1b-2c3d-4e5f6a7b8c9d"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="12" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["N° " + $P{P_CODIGO_MATRICULA}]]></textFieldExpression>
+            </textField>
+
+            <!-- Cuadro de datos del estudiante -->
+            <rectangle radius="5">
+                <reportElement x="0" y="96" width="555" height="50" backcolor="#F8FAFC" uuid="b5c6d7e8-f9a0-1b2c-3d4e-5f6a7b8c9d0e"/>
+                <graphicElement><pen lineWidth="0.5" lineColor="#CBD5E1"/></graphicElement>
+            </rectangle>
+
+            <staticText>
+                <reportElement x="10" y="100" width="70" height="15" forecolor="#64748B" uuid="c6d7e8f9-a0b1-2c3d-4e5f-6a7b8c9d0e1f"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[ESTUDIANTE:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="85" y="100" width="260" height="15" forecolor="#0F172A" uuid="d7e8f9a0-b1c2-3d4e-5f6a-7b8c9d0e1f2a"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_ESTUDIANTE_NOMBRE}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="355" y="100" width="60" height="15" forecolor="#64748B" uuid="e8f9a0b1-c2d3-4e5f-6a7b-8c9d0e1f2a3b"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[DNI:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="415" y="100" width="130" height="15" forecolor="#0F172A" uuid="f9a0b1c2-d3e4-5f6a-7b8c-9d0e1f2a3b4c"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_ESTUDIANTE_DNI}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="10" y="120" width="70" height="15" forecolor="#64748B" uuid="a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[CARRERA:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="85" y="120" width="260" height="15" forecolor="#0F172A" uuid="b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_CARRERA}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="355" y="120" width="60" height="15" forecolor="#64748B" uuid="c2d3e4f5-a6b7-8c9d-0e1f-2a3b4c5d6e7f"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[PERIODO:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="415" y="120" width="130" height="15" forecolor="#1E3A8A" uuid="d3e4f5a6-b7c8-9d0e-1f2a-3b4c5d6e7f8a"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_PERIODO}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <!-- Encabezado de Columnas -->
+    <columnHeader>
+        <band height="25" splitType="Stretch">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="25" backcolor="#1E3A8A" uuid="e4f5a6b7-c8d9-0e1f-2a3b-4c5d6e7f8a9b"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="5" y="0" width="55" height="25" forecolor="#FFFFFF" uuid="f5a6b7c8-d9e0-1f2a-3b4c-5d6e7f8a9b0c"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[CÓDIGO]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="65" y="0" width="190" height="25" forecolor="#FFFFFF" uuid="a6b7c8d9-e0f1-2a3b-4c5d-6e7f8a9b0c1d"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[ASIGNATURA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="260" y="0" width="45" height="25" forecolor="#FFFFFF" uuid="b7c8d9e0-f1a2-3b4c-5d6e-7f8a9b0c1d2e"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[SECC.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="310" y="0" width="135" height="25" forecolor="#FFFFFF" uuid="c8d9e0f1-a2b3-4c5d-6e7f-8a9b0c1d2e3f"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[DOCENTE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="450" y="0" width="45" height="25" forecolor="#FFFFFF" uuid="d9e0f1a2-b3c4-5d6e-7f8a-9b0c1d2e3f4a"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[CRÉD.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="500" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="e0f1a2b3-c4d5-6e7f-8a9b-0c1d2e3f4a5b"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[COSTO]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <!-- Detalle (Filas de Cursos) -->
+    <detail>
+        <band height="20" splitType="Stretch">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="20" backcolor="#FFFFFF" uuid="f1a2b3c4-d5e6-7f8a-9b0c-1d2e3f4a5b6c">
+                    <printWhenExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></printWhenExpression>
+                </reportElement>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <textField>
+                <reportElement x="5" y="2" width="55" height="16" forecolor="#1E3A8A" uuid="a2b3c4d5-e6f7-8a9b-0c1d-2e3f4a5b6c7d"/>
+                <textElement verticalAlignment="Middle"><font size="8" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{cursoCodigo}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="65" y="2" width="190" height="16" uuid="b3c4d5e6-f7a8-9b0c-1d2e-3f4a5b6c7d8e"/>
+                <textElement verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{cursoNombre}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="260" y="2" width="45" height="16" uuid="c4d5e6f7-a8b9-0c1d-2e3f-4a5b6c7d8e9f"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{codigoSeccion}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="310" y="2" width="135" height="16" uuid="d5e6f7a8-b9c0-1d2e-3f4a-5b6c7d8e9f0a"/>
+                <textElement verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{docenteNombre} != null ? $F{docenteNombre} : "Por Asignar"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="2" width="45" height="16" uuid="e6f7a8b9-c0d1-2e3f-4a5b-6c7d8e9f0a1b"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="8" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{creditos}]]></textFieldExpression>
+            </textField>
+            <textField pattern="S/ #,##0.00">
+                <reportElement x="500" y="2" width="50" height="16" uuid="f7a8b9c0-d1e2-3f4a-5b6c-7d8e9f0a1b2c"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="8" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{costoCurso}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="19" width="555" height="1" forecolor="#E2E8F0" uuid="a8b9c0d1-e2f3-4a5b-6c7d-8e9f0a1b2c3d"/>
+                <graphicElement><pen lineWidth="0.5"/></graphicElement>
+            </line>
+        </band>
+    </detail>
+
+    <!-- Resumen y Totales -->
+    <summary>
+        <band height="140" splitType="Stretch">
+            <rectangle radius="5">
+                <reportElement x="320" y="10" width="235" height="50" backcolor="#F1F5F9" uuid="b9c0d1e2-f3a4-5b6c-7d8e-9f0a1b2c3d4e"/>
+                <graphicElement><pen lineWidth="0.5" lineColor="#CBD5E1"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="330" y="15" width="110" height="18" uuid="c0d1e2f3-a4b5-6c7d-8e9f-0a1b2c3d4e5f"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[TOTAL CRÉDITOS:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="445" y="15" width="100" height="18" forecolor="#1E3A8A" uuid="d1e2f3a4-b5c6-7d8e-9f0a-1b2c3d4e5f6a"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_TOTAL_CREDITOS} + " cred."]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="330" y="35" width="110" height="18" uuid="e2f3a4b5-c6d7-8e9f-0a1b-2c3d4e5f6a7b"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[IMPORTE TOTAL:]]></text>
+            </staticText>
+            <textField pattern="S/ #,##0.00">
+                <reportElement x="445" y="35" width="100" height="18" forecolor="#15803D" uuid="f3a4b5c6-d7e8-9f0a-1b2c-3d4e5f6a7b8c"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="11" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_COSTO_TOTAL}]]></textFieldExpression>
+            </textField>
+
+            <!-- Estado de la matrícula -->
+            <textField>
+                <reportElement x="10" y="15" width="280" height="20" forecolor="#1E3A8A" uuid="a4b5c6d7-e8f9-0a1b-2c3d-4e5f6a7b8c9d"/>
+                <textElement verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA["ESTADO DE LA MATRÍCULA: " + $P{P_ESTADO}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="10" y="35" width="280" height="15" forecolor="#64748B" uuid="b5c6d7e8-f9a0-1b2c-3d4e-5f6a7b8c9d0e"/>
+                <textElement verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA["Fecha de emisión: " + $P{P_FECHA_EMISION}]]></textFieldExpression>
+            </textField>
+
+            <!-- Firmas de conformidad -->
+            <line>
+                <reportElement x="60" y="115" width="160" height="1" forecolor="#94A3B8" uuid="c6d7e8f9-a0b1-2c3d-4e5f-6a7b8c9d0e1f"/>
+                <graphicElement><pen lineWidth="1.0" lineStyle="Dashed"/></graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="60" y="120" width="160" height="15" forecolor="#64748B" uuid="d7e8f9a0-b1c2-3d4e-5f6a-7b8c9d0e1f2a"/>
+                <textElement textAlignment="Center"><font size="8" isBold="true"/></textElement>
+                <text><![CDATA[Firma del Estudiante]]></text>
+            </staticText>
+
+            <line>
+                <reportElement x="330" y="115" width="160" height="1" forecolor="#94A3B8" uuid="e8f9a0b1-c2d3-4e5f-6a7b-8c9d0e1f2a3b"/>
+                <graphicElement><pen lineWidth="1.0" lineStyle="Dashed"/></graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="330" y="120" width="160" height="15" forecolor="#64748B" uuid="f9a0b1c2-d3e4-5f6a-7b8c-9d0e1f2a3b4c"/>
+                <textElement textAlignment="Center"><font size="8" isBold="true"/></textElement>
+                <text><![CDATA[Oficina de Registros Académicos]]></text>
+            </staticText>
+        </band>
+    </summary>
+
+</jasperReport>

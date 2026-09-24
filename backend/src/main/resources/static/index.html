@@ -189,9 +189,14 @@
           <h2 class="text-2xl font-bold text-slate-800">Listado de Matrículas</h2>
           <p class="text-sm text-slate-500">Registro histórico de matrículas y control de estado de pagos.</p>
         </div>
-        <button onclick="switchTab('nueva-matricula')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition flex items-center">
-          <i class="fa-solid fa-plus mr-2"></i> Nueva Matrícula
-        </button>
+        <div class="flex items-center space-x-2">
+          <button onclick="descargarReporteMatriculasPdf()" class="bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-2 rounded-lg text-sm font-semibold shadow transition flex items-center">
+            <i class="fa-solid fa-file-pdf mr-1.5"></i> Reporte PDF
+          </button>
+          <button onclick="switchTab('nueva-matricula')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition flex items-center">
+            <i class="fa-solid fa-plus mr-2"></i> Nueva Matrícula
+          </button>
+        </div>
       </div>
 
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -334,9 +339,14 @@
           <h2 class="text-2xl font-bold text-slate-800">Padrón de Estudiantes</h2>
           <p class="text-sm text-slate-500">Listado de alumnos matriculados y en condición regular.</p>
         </div>
-        <button onclick="abrirModalNuevoEstudiante()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition flex items-center">
-          <i class="fa-solid fa-user-plus mr-2"></i> Registrar Alumno
-        </button>
+        <div class="flex items-center space-x-2">
+          <button onclick="descargarPadronEstudiantesPdf()" class="bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-2 rounded-lg text-sm font-semibold shadow transition flex items-center">
+            <i class="fa-solid fa-file-pdf mr-1.5"></i> Padrón PDF
+          </button>
+          <button onclick="abrirModalNuevoEstudiante()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition flex items-center">
+            <i class="fa-solid fa-user-plus mr-2"></i> Registrar Alumno
+          </button>
+        </div>
       </div>
 
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -449,6 +459,9 @@
 
         <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
           <button onclick="cerrarModalDetalle()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-semibold rounded-lg transition">Cerrar</button>
+          <button onclick="imprimirPdfMatriculaModal()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-lg shadow transition flex items-center">
+            <i class="fa-solid fa-file-pdf mr-1.5"></i> Imprimir Ficha PDF
+          </button>
         </div>
       </div>
     </div>

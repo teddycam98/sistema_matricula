@@ -135,13 +135,16 @@ function renderMatriculasTable(lista) {
         <button onclick="verDetalleMatricula(${m.id})" title="Ver Cursos" class="p-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-md transition">
           <i class="fa-solid fa-eye text-sm"></i>
         </button>
+        <button onclick="imprimirPdfMatricula(${m.id})" title="Imprimir Ficha PDF (JasperReports)" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-md transition font-semibold text-xs inline-flex items-center">
+          <i class="fa-solid fa-file-pdf text-sm text-rose-600 mr-1"></i> Ficha
+        </button>
         ${m.estado === "CONFIRMADA" ? `
           <button onclick="pagarMatricula(${m.id})" title="Registrar Pago" class="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-md transition">
             <i class="fa-solid fa-cash-register text-sm"></i>
           </button>
         ` : ''}
         ${m.estado !== "ANULADA" ? `
-          <button onclick="anularMatricula(${m.id})" title="Anular Matrícula" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-md transition">
+          <button onclick="anularMatricula(${m.id})" title="Anular Matrícula" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-md transition">
             <i class="fa-solid fa-ban text-sm"></i>
           </button>
         ` : ''}
@@ -162,7 +165,10 @@ function filtrarMatriculas() {
   renderMatriculasTable(filtradas);
 }
 
+let matriculaModalId = null;
+
 function verDetalleMatricula(id) {
+  matriculaModalId = id;
   const m = appState.matriculas.find(x => x.id === id);
   if (!m) return;
 
@@ -242,6 +248,23 @@ async function pagarMatricula(id) {
   } catch (err) {
     mostrarToast("Error en la conexión con el servidor", "error");
   }
+function imprimirPdfMatricula(id) {
+  // Abre directamente el endpoint de JasperReports en una nueva pestaña del navegador
+  window.open(`${API_BASE}/reportes/matricula/${id}/pdf`, '_blank');
+}
+
+function imprimirPdfMatriculaModal() {
+  if (matriculaModalId) {
+    imprimirPdfMatricula(matriculaModalId);
+  }
+}
+
+function descargarReporteMatriculasPdf() {
+  window.open(`${API_BASE}/reportes/matriculas/pdf`, '_blank');
+}
+
+function descargarPadronEstudiantesPdf() {
+  window.open(`${API_BASE}/reportes/estudiantes/pdf`, '_blank');
 }
 
 // ==================== NUEVA MATRÍCULA ====================
