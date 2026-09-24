@@ -1,11 +1,11 @@
 /* ==========================================================================
    ESTILOS PERSONALIZADOS - SISTEMA DE MATRÍCULA
-   Soporte para Modo Oscuro Azulino / Slate Moderno & Modo Claro
+   Modo Oscuro (Azulino con Degradado) & Modo Claro (Plomo con Degradado)
    ========================================================================== */
 
-/* Transición suave para todos los cambios de color */
+/* Transición suave para todos los cambios de tema */
 body, nav, main, footer, div, section, table, tr, th, td, input, select, button {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
 
 /* Tab activo en la barra de navegación */
@@ -13,7 +13,7 @@ body, nav, main, footer, div, section, table, tr, th, td, input, select, button 
   background-color: #4338ca !important; /* Indigo 700 */
   color: #ffffff !important;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.4);
+  box-shadow: 0 4px 14px rgba(67, 56, 202, 0.45);
 }
 
 /* Animación de entrada de pestañas */
@@ -33,29 +33,121 @@ body, nav, main, footer, div, section, table, tr, th, td, input, select, button 
 }
 
 /* ==========================================================================
-   TEMA OSCURO AZULINO MODERNO (DEFAULT & CLASS .dark-mode)
+   1. MODO CLARO - DEGRADADO PLOMO / SLATE ELEGANTE (NO AZULINO)
+   ========================================================================== */
+body:not(.dark-mode) {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 45%, #cbd5e1 100%) fixed !important;
+  color: #1e293b !important;
+}
+
+body:not(.dark-mode) nav {
+  background: linear-gradient(90deg, #1e293b 0%, #334155 100%) !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Tarjetas y Contenedores en Modo Claro */
+body:not(.dark-mode) .bg-white {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #1e293b !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 6px 18px -2px rgba(100, 116, 139, 0.12) !important;
+}
+
+body:not(.dark-mode) .bg-slate-50 {
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
+  border-color: #cbd5e1 !important;
+}
+
+body:not(.dark-mode) .bg-slate-100 {
+  background-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
+/* Tablas en Modo Claro */
+body:not(.dark-mode) table thead {
+  background-color: #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+body:not(.dark-mode) table thead th {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+body:not(.dark-mode) table tbody tr:hover {
+  background-color: rgba(226, 232, 240, 0.5) !important;
+}
+
+/* Textos en Modo Claro */
+body:not(.dark-mode) .text-slate-800,
+body:not(.dark-mode) .text-slate-900,
+body:not(.dark-mode) .text-slate-700 {
+  color: #0f172a !important;
+}
+
+body:not(.dark-mode) .text-slate-600 {
+  color: #334155 !important;
+}
+
+body:not(.dark-mode) .text-slate-500 {
+  color: #64748b !important;
+}
+
+body:not(.dark-mode) .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Formularios en Modo Claro */
+body:not(.dark-mode) input[type="text"],
+body:not(.dark-mode) input[type="email"],
+body:not(.dark-mode) input[type="number"],
+body:not(.dark-mode) select,
+body:not(.dark-mode) textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #94a3b8 !important;
+}
+
+body:not(.dark-mode) input:focus,
+body:not(.dark-mode) select:focus {
+  border-color: #4f46e5 !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2) !important;
+}
+
+/* Footer en Modo Claro */
+body:not(.dark-mode) footer {
+  background-color: rgba(226, 232, 240, 0.8) !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+/* ==========================================================================
+   2. MODO OSCURO - DEGRADADO AZULINO PROFUNDO MODERNO
    ========================================================================== */
 body.dark-mode {
-  background: radial-gradient(circle at 10% 20%, #0f172a 0%, #080d1a 50%, #030712 100%) fixed !important;
+  background: radial-gradient(circle at 15% 15%, #172554 0%, #0f172a 35%, #080e1e 70%, #020617 100%) fixed !important;
   color: #f1f5f9 !important;
 }
 
 body.dark-mode nav {
-  background-color: rgba(11, 17, 32, 0.95) !important;
-  border-bottom: 1px solid #1e293b !important;
+  background: linear-gradient(90deg, #070d19 0%, #0f172a 50%, #172554 100%) !important;
+  border-bottom: 1px solid #1e3a8a !important;
   backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
-/* Tarjetas y Contenedores */
+/* Tarjetas y Contenedores en Modo Oscuro */
 body.dark-mode .bg-white {
-  background-color: rgba(15, 23, 42, 0.85) !important;
+  background-color: rgba(15, 23, 42, 0.88) !important;
   color: #f8fafc !important;
   border-color: #1e293b !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5) !important;
 }
 
 body.dark-mode .bg-slate-50 {
-  background-color: #0b1329 !important;
+  background-color: #0a1122 !important;
   color: #f1f5f9 !important;
   border-color: #1e293b !important;
 }
@@ -70,7 +162,7 @@ body.dark-mode .bg-slate-200 {
   color: #f1f5f9 !important;
 }
 
-/* Textos */
+/* Textos en Modo Oscuro */
 body.dark-mode .text-slate-800,
 body.dark-mode .text-slate-900,
 body.dark-mode .text-slate-700 {
@@ -89,7 +181,7 @@ body.dark-mode .text-slate-400 {
   color: #64748b !important;
 }
 
-/* Bordes y Divisores */
+/* Bordes y Divisores en Modo Oscuro */
 body.dark-mode .border-slate-200,
 body.dark-mode .border-slate-300,
 body.dark-mode .border-slate-100 {
@@ -101,13 +193,13 @@ body.dark-mode .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
   border-color: #1e293b !important;
 }
 
-/* Formularios: Inputs, Selects y Textareas */
+/* Formularios en Modo Oscuro */
 body.dark-mode input[type="text"],
 body.dark-mode input[type="email"],
 body.dark-mode input[type="number"],
 body.dark-mode select,
 body.dark-mode textarea {
-  background-color: #0b1120 !important;
+  background-color: #0b1222 !important;
   color: #f8fafc !important;
   border-color: #334155 !important;
 }
@@ -115,10 +207,10 @@ body.dark-mode textarea {
 body.dark-mode input:focus,
 body.dark-mode select:focus {
   border-color: #6366f1 !important;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3) !important;
 }
 
-/* Tablas */
+/* Tablas en Modo Oscuro */
 body.dark-mode table thead {
   background-color: #111c35 !important;
   color: #94a3b8 !important;
@@ -159,28 +251,28 @@ body.dark-mode .bg-slate-900\/75 {
   background-color: rgba(2, 6, 23, 0.9) !important;
 }
 
-/* Pie de Página */
+/* Footer en Modo Oscuro */
 body.dark-mode footer {
   background-color: #080d1a !important;
   border-color: #1e293b !important;
   color: #64748b !important;
 }
 
-/* Scrollbar moderno */
+/* Scrollbar estilizado */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 23, 42, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #475569;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #64748b;
 }
