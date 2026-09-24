@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Matrícula Universitaria - MVC Spring Boot</title>
+  <title>Sistema de Matrícula Universitaria - MVC Spring Boot & JasperReports</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
@@ -22,7 +22,7 @@
           </div>
           <div>
             <h1 class="text-lg font-bold tracking-tight">SISTEMA DE MATRÍCULA</h1>
-            <p class="text-xs text-indigo-300">Arquitectura MVC • Spring Boot & MySQL</p>
+            <p class="text-xs text-indigo-300">Arquitectura MVC • Spring Boot, MySQL & JasperReports</p>
           </div>
         </div>
 
@@ -45,6 +45,9 @@
           </button>
           <button onclick="switchTab('docentes')" id="nav-docentes" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
             <i class="fa-solid fa-chalkboard-user mr-1.5"></i> Docentes
+          </button>
+          <button onclick="switchTab('reportes')" id="nav-reportes" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+            <i class="fa-solid fa-file-pdf mr-1.5 text-rose-300"></i> Reportes
           </button>
         </div>
 
@@ -164,11 +167,11 @@
                   <p class="text-xs text-slate-500">Agregar nuevo estudiante al sistema</p>
                 </div>
               </button>
-              <button onclick="switchTab('cursos')" class="w-full text-left px-4 py-3 rounded-lg border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition flex items-center space-x-3">
-                <i class="fa-solid fa-calendar-days text-indigo-600 text-lg"></i>
+              <button onclick="switchTab('reportes')" class="w-full text-left px-4 py-3 rounded-lg border border-rose-200 hover:border-rose-500 hover:bg-rose-50 transition flex items-center space-x-3">
+                <i class="fa-solid fa-file-pdf text-rose-600 text-lg"></i>
                 <div>
-                  <p class="text-sm font-semibold text-slate-800">Catálogo de Cursos</p>
-                  <p class="text-xs text-slate-500">Consultar vacantes y horarios</p>
+                  <p class="text-sm font-semibold text-slate-800">Módulo JasperReports</p>
+                  <p class="text-xs text-slate-500">Generar constancias oficiales en PDF</p>
                 </div>
               </button>
             </div>
@@ -419,6 +422,183 @@
       </div>
     </section>
 
+    <!-- TAB 7: REPORTES JASPERREPORTS -->
+    <section id="tab-reportes" class="tab-content hidden">
+      <!-- Header Banner -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-6 sm:p-8 mb-8 shadow-xl relative overflow-hidden">
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full text-xs font-semibold uppercase tracking-wider mb-3 border border-rose-500/30">
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>Módulo de Emisión Oficial de Documentos</span>
+          </div>
+          <h2 class="text-3xl font-extrabold tracking-tight text-white mb-2">Ecosistema JasperReports v6.21.3</h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+            Generación, compilación y renderizado dinámico de constancias de matrícula y padrones universitarios con diseño corporativo institucional de alta fidelidad.
+          </p>
+        </div>
+        <div class="absolute -right-10 -bottom-10 opacity-10 text-white text-9xl pointer-events-none hidden sm:block">
+          <i class="fa-solid fa-file-invoice"></i>
+        </div>
+      </div>
+
+      <!-- JasperReports Ecosystem Cards (Exactamente como la imagen proporcionada) -->
+      <div class="mb-10">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-800 flex items-center">
+            <i class="fa-solid fa-cubes text-indigo-600 mr-2"></i>
+            Componentes del Ecosistema JasperReports
+          </h3>
+          <span class="text-xs text-slate-400 font-medium">Arquitectura de Reportes</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Card 1: JasperReports Library -->
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+            <div>
+              <div class="w-14 h-14 rounded-xl bg-slate-900 text-sky-400 flex items-center justify-center text-2xl mb-4 shadow">
+                <i class="fa-solid fa-gears"></i>
+              </div>
+              <h4 class="text-base font-bold text-slate-900 mb-2">JasperReports Library</h4>
+              <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                Es el motor central que compila, llena y exporta reportes, integrándose en aplicaciones Java para gestionar el ciclo completo.
+              </p>
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold text-indigo-600"><i class="fa-brands fa-java mr-1"></i> Core Java Engine</span>
+              <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-mono">v6.21.3</span>
+            </div>
+          </div>
+
+          <!-- Card 2: JasperSoft Studio -->
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+            <div>
+              <div class="w-14 h-14 rounded-xl bg-slate-900 text-emerald-400 flex items-center justify-center text-2xl mb-4 shadow">
+                <i class="fa-solid fa-laptop-code"></i>
+              </div>
+              <h4 class="text-base font-bold text-slate-900 mb-2">JasperSoft Studio</h4>
+              <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                Herramienta gráfica basada en Eclipse que permite diseñar reportes visualmente y modificar archivos JRXML para usuarios avanzados.
+              </p>
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold text-emerald-600"><i class="fa-solid fa-code mr-1"></i> Formato JRXML</span>
+              <span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-mono">ficha_matricula</span>
+            </div>
+          </div>
+
+          <!-- Card 3: JasperReports Server -->
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between">
+            <div>
+              <div class="w-14 h-14 rounded-xl bg-slate-900 text-violet-400 flex items-center justify-center text-2xl mb-4 shadow">
+                <i class="fa-solid fa-server"></i>
+              </div>
+              <h4 class="text-base font-bold text-slate-900 mb-2">JasperReports Server</h4>
+              <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                Plataforma para centralizar, administrar y publicar reportes a nivel organizacional, enfocada en inteligencia de negocios.
+              </p>
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold text-violet-600"><i class="fa-solid fa-cloud mr-1"></i> BI & Distribución</span>
+              <span class="bg-violet-50 text-violet-700 px-2 py-0.5 rounded font-mono">REST Endpoints</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Center: Descargas y Vista Previa de Reportes -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-800 flex items-center">
+            <i class="fa-solid fa-download text-rose-600 mr-2"></i>
+            Centro de Emisión y Descarga de Documentos PDF
+          </h3>
+          <span class="text-xs text-slate-400 font-medium">Exportación instantánea</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Reporte 1: Ficha Individual -->
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-wider">Individual</span>
+                <i class="fa-solid fa-file-invoice text-rose-500 text-xl"></i>
+              </div>
+              <h4 class="font-bold text-slate-800 text-base mb-1">Constancia de Matrícula</h4>
+              <p class="text-xs text-slate-500 mb-4">Documento individual con detalle de cursos, créditos asignados, datos del alumno y firmas de control.</p>
+
+              <div class="mb-4">
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Seleccionar Matrícula:</label>
+                <select id="reporte-select-matricula" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                  <option value="">Cargando matrículas...</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100">
+              <button onclick="previsualizarFichaMatriculaSeleccionada()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition flex items-center justify-center">
+                <i class="fa-solid fa-eye mr-1.5 text-indigo-600"></i> Vista Previa
+              </button>
+              <button onclick="descargarFichaMatriculaSeleccionada()" class="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-semibold shadow transition flex items-center justify-center">
+                <i class="fa-solid fa-file-pdf mr-1.5"></i> Descargar
+              </button>
+            </div>
+          </div>
+
+          <!-- Reporte 2: Consolidado General de Matrículas -->
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold uppercase tracking-wider">Consolidado</span>
+                <i class="fa-solid fa-table-list text-emerald-500 text-xl"></i>
+              </div>
+              <h4 class="font-bold text-slate-800 text-base mb-1">Reporte General de Matrículas</h4>
+              <p class="text-xs text-slate-500 mb-4">Padrón histórico completo con códigos de matrícula, periodos, total de créditos, costos y estados en el semestre.</p>
+
+              <div class="p-3 bg-slate-50 rounded-lg mb-4 text-xs text-slate-600">
+                <p><i class="fa-solid fa-check-circle text-emerald-500 mr-1"></i> Diseño JasperDesign dinámico</p>
+                <p><i class="fa-solid fa-check-circle text-emerald-500 mr-1"></i> Totalizador de registros y montos</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100">
+              <button onclick="previsualizarReporteMatriculasPdf()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition flex items-center justify-center">
+                <i class="fa-solid fa-eye mr-1.5 text-emerald-600"></i> Vista Previa
+              </button>
+              <button onclick="descargarReporteMatriculasPdf()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow transition flex items-center justify-center">
+                <i class="fa-solid fa-file-pdf mr-1.5"></i> Descargar
+              </button>
+            </div>
+          </div>
+
+          <!-- Reporte 3: Padrón Oficial de Estudiantes -->
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 bg-violet-50 text-violet-700 rounded-full text-xs font-bold uppercase tracking-wider">Institucional</span>
+                <i class="fa-solid fa-users-viewfinder text-violet-500 text-xl"></i>
+              </div>
+              <h4 class="font-bold text-slate-800 text-base mb-1">Padrón General de Estudiantes</h4>
+              <p class="text-xs text-slate-500 mb-4">Relación de estudiantes regulares registrados con carnet universitario, DNI, carreras y correo institucional.</p>
+
+              <div class="p-3 bg-slate-50 rounded-lg mb-4 text-xs text-slate-600">
+                <p><i class="fa-solid fa-check-circle text-violet-500 mr-1"></i> Clasificación por Escuela Profesional</p>
+                <p><i class="fa-solid fa-check-circle text-violet-500 mr-1"></i> Formato oficial A4 para auditoría</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100">
+              <button onclick="previsualizarPadronEstudiantesPdf()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition flex items-center justify-center">
+                <i class="fa-solid fa-eye mr-1.5 text-violet-600"></i> Vista Previa
+              </button>
+              <button onclick="descargarPadronEstudiantesPdf()" class="w-full py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-xs font-semibold shadow transition flex items-center justify-center">
+                <i class="fa-solid fa-file-pdf mr-1.5"></i> Descargar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- MODAL: DETALLES DE MATRÍCULA -->
@@ -528,10 +708,31 @@
     </div>
   </div>
 
+  <!-- MODAL: VISOR DE REPORTES PDF (INTERACTIVO) -->
+  <div id="modal-visor-pdf" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full h-[90vh] shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in duration-150">
+      <div class="bg-slate-900 text-white px-6 py-3.5 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-file-pdf text-rose-500 text-lg"></i>
+          <h3 class="font-bold text-sm tracking-wide" id="modal-visor-titulo">Visor de Documento PDF - JasperReports</h3>
+        </div>
+        <div class="flex items-center space-x-3">
+          <a id="modal-visor-btn-descargar" href="#" target="_blank" class="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-xs font-semibold flex items-center shadow transition">
+            <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i> Abrir en Pestaña
+          </a>
+          <button onclick="cerrarVisorPdf()" class="text-slate-400 hover:text-white text-2xl font-bold leading-none">&times;</button>
+        </div>
+      </div>
+      <div class="flex-grow bg-slate-100 p-2">
+        <iframe id="modal-visor-iframe" src="" class="w-full h-full rounded border border-slate-300 bg-white"></iframe>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 mt-auto py-4">
     <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
-      Sistema de Matrícula Académica &bull; Modelo Vista Controlador (MVC) &bull; Spring Boot 4 / MySQL 8.0 &bull; Examen de Aplicaciones
+      Sistema de Matrícula Académica &bull; Modelo Vista Controlador (MVC) &bull; Spring Boot 4 / MySQL 8.0 &bull; Motor de Reportes JasperReports 6.21.3
     </div>
   </footer>
 

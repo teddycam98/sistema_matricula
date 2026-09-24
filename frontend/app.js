@@ -47,6 +47,7 @@ function switchTab(tabId) {
   if (tabId === "estudiantes") cargarEstudiantes();
   if (tabId === "cursos") cargarCursos();
   if (tabId === "docentes") cargarDocentes();
+  if (tabId === "reportes") cargarModuloReportes();
 }
 
 // ==================== DASHBOARD ====================
@@ -267,6 +268,80 @@ function descargarReporteMatriculasPdf() {
 
 function descargarPadronEstudiantesPdf() {
   window.open(`${API_BASE}/reportes/estudiantes/pdf`, '_blank');
+}
+
+// ==================== MÓDULO DE REPORTES JASPERREPORTS ====================
+async function cargarModuloReportes() {
+  try {
+    const res = await fetch(`${API_BASE}/matriculas`);
+    if (res.ok) {
+      const { data } = await res.json();
+      appState.matriculas = data;
+      const select = document.getElementById("reporte-select-matricula");
+      if (!select) return;
+      if (!data || data.length === 0) {
+        select.innerHTML = '<option value="">No hay matrículas registradas</option>';
+        return;
+      }
+      select.innerHTML = '';
+      data.forEach(m => {
+        const opt = document.createElement("option");
+        opt.value = m.id;
+        const estNombre = m.estudiante ? `${m.estudiante.nombres} ${m.estudiante.apellidos}` : 'Estudiante';
+        const carNom = (m.estudiante && m.estudiante.carrera) ? m.estudiante.carrera.nombre : '';
+        opt.textContent = `${m.codigoMatricula} - ${estNombre} (${carNom})`;
+        select.appendChild(opt);
+      });
+    }
+  } catch (err) {
+    console.error("Error al cargar selector de matrículas:", err);
+  }
+}
+
+function descargarFichaMatriculaSeleccionada() {
+  const select = document.getElementById("reporte-select-matricula");
+  if (!select || !select.value) {
+    mostrarToast("Por favor seleccione una matrícula", "error");
+    return;
+  }
+  imprimirPdfMatricula(select.value);
+}
+
+function previsualizarFichaMatriculaSeleccionada() {
+  const select = document.getElementById("reporte-select-matricula");
+  if (!select || !select.value) {
+    mostrarToast("Por favor seleccione una matrícula", "error");
+    return;
+  }
+  const text = select.options[select.selectedIndex]?.text || "Ficha Oficial de Matrícula";
+  abrirVisorPdf(`${API_BASE}/reportes/matricula/${select.value}/pdf`, `Constancia Oficial de Matrícula: ${text}`);
+}
+
+function previsualizarReporteMatriculasPdf() {
+  abrirVisorPdf(`${API_BASE}/reportes/matriculas/pdf`, "Reporte General Consolidado de Matrículas (JasperReports)");
+}
+
+function previsualizarPadronEstudiantesPdf() {
+  abrirVisorPdf(`${API_BASE}/reportes/estudiantes/pdf`, "Padrón Oficial de Estudiantes Universitarios (JasperReports)");
+}
+
+function abrirVisorPdf(url, titulo) {
+  const modal = document.getElementById("modal-visor-pdf");
+  const iframe = document.getElementById("modal-visor-iframe");
+  const tituloEl = document.getElementById("modal-visor-titulo");
+  const btnDescargar = document.getElementById("modal-visor-btn-descargar");
+
+  if (tituloEl) tituloEl.textContent = titulo;
+  if (btnDescargar) btnDescargar.href = url;
+  if (iframe) iframe.src = url;
+  if (modal) modal.classList.remove("hidden");
+}
+
+function cerrarVisorPdf() {
+  const modal = document.getElementById("modal-visor-pdf");
+  const iframe = document.getElementById("modal-visor-iframe");
+  if (modal) modal.classList.add("hidden");
+  if (iframe) iframe.src = "";
 }
 
 // ==================== NUEVA MATRÍCULA ====================
