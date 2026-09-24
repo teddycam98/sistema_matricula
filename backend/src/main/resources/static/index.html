@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Matrícula Universitaria - MVC Spring Boot</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+
+  <!-- Top Navbar -->
+  <nav class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight">SISTEMA DE MATRÍCULA</h1>
+            <p class="text-xs text-indigo-300">Arquitectura MVC • Spring Boot & MySQL</p>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="hidden md:flex space-x-1">
+          <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition active-tab">
+            <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard
+          </button>
+          <button onclick="switchTab('matriculas')" id="nav-matriculas" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+            <i class="fa-solid fa-file-signature mr-1.5"></i> Matrículas
+          </button>
+          <button onclick="switchTab('nueva-matricula')" id="nav-nueva-matricula" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+            <i class="fa-solid fa-user-plus mr-1.5"></i> Nueva Matrícula
+          </button>
+          <button onclick="switchTab('estudiantes')" id="nav-estudiantes" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+            <i class="fa-solid fa-users mr-1.5"></i> Estudiantes
+          </button>
+          <button onclick="switchTab('cursos')" id="nav-cursos" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+            <i class="fa-solid fa-book-open mr-1.5"></i> Cursos
+          </button>
+          <button onclick="switchTab('docentes')" id="nav-docentes" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+            <i class="fa-solid fa-chalkboard-user mr-1.5"></i> Docentes
+          </button>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500 text-white">
+            <i class="fa-solid fa-circle text-[8px] mr-1 animate-pulse"></i> API Conectada
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-lg shadow-xl flex items-center space-x-3 transition-opacity duration-300">
+      <i id="toast-icon" class="fa-solid fa-check-circle text-emerald-400 text-xl"></i>
+      <span id="toast-msg">Mensaje del sistema</span>
+    </div>
+
+    <!-- TAB 1: DASHBOARD -->
+    <section id="tab-dashboard" class="tab-content">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-slate-800">Panel Principal</h2>
+        <p class="text-sm text-slate-500">Resumen general del periodo académico activo y estadísticas en tiempo real.</p>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Estudiantes</p>
+            <h3 id="stat-estudiantes" class="text-3xl font-bold text-slate-800 mt-1">--</h3>
+            <span class="text-xs text-indigo-600 font-medium">Registrados</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-user-graduate"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Matrículas</p>
+            <h3 id="stat-matriculas" class="text-3xl font-bold text-slate-800 mt-1">--</h3>
+            <span class="text-xs text-emerald-600 font-medium">Periodo 2026-I</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-file-invoice"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Cursos & Secciones</p>
+            <h3 id="stat-cursos" class="text-3xl font-bold text-slate-800 mt-1">--</h3>
+            <span class="text-xs text-amber-600 font-medium"><span id="stat-secciones">--</span> secciones</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-book"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Recaudación</p>
+            <h3 id="stat-recaudado" class="text-2xl font-bold text-slate-800 mt-1">S/ 0.00</h3>
+            <span class="text-xs text-teal-600 font-medium">Pagos completados</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-cash-register"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions and Recent Matrículas -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-slate-800 text-lg">Últimas Matrículas Registradas</h3>
+            <button onclick="switchTab('matriculas')" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold">Ver todas &rarr;</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-600">
+              <thead class="bg-slate-50 text-xs uppercase font-semibold text-slate-500">
+                <tr>
+                  <th class="py-3 px-3">Código</th>
+                  <th class="py-3 px-3">Estudiante</th>
+                  <th class="py-3 px-3">Carrera</th>
+                  <th class="py-3 px-3">Créditos</th>
+                  <th class="py-3 px-3">Costo</th>
+                  <th class="py-3 px-3">Estado</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-matriculas-tbody" class="divide-y divide-slate-100">
+                <tr><td colspan="6" class="py-4 text-center text-slate-400">Cargando datos...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold text-slate-800 text-lg mb-3">Acciones Rápidas</h3>
+            <div class="space-y-3">
+              <button onclick="switchTab('nueva-matricula')" class="w-full text-left px-4 py-3 rounded-lg border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition flex items-center space-x-3">
+                <i class="fa-solid fa-plus-circle text-indigo-600 text-lg"></i>
+                <div>
+                  <p class="text-sm font-semibold text-slate-800">Registrar Nueva Matrícula</p>
+                  <p class="text-xs text-slate-500">Inscribir alumno en secciones disponibles</p>
+                </div>
+              </button>
+              <button onclick="abrirModalNuevoEstudiante()" class="w-full text-left px-4 py-3 rounded-lg border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition flex items-center space-x-3">
+                <i class="fa-solid fa-user-plus text-indigo-600 text-lg"></i>
+                <div>
+                  <p class="text-sm font-semibold text-slate-800">Registrar Alumno</p>
+                  <p class="text-xs text-slate-500">Agregar nuevo estudiante al sistema</p>
+                </div>
+              </button>
+              <button onclick="switchTab('cursos')" class="w-full text-left px-4 py-3 rounded-lg border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition flex items-center space-x-3">
+                <i class="fa-solid fa-calendar-days text-indigo-600 text-lg"></i>
+                <div>
+                  <p class="text-sm font-semibold text-slate-800">Catálogo de Cursos</p>
+                  <p class="text-xs text-slate-500">Consultar vacantes y horarios</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-400">
+            <p><i class="fa-solid fa-database mr-1"></i> MySQL DB: <span class="font-semibold text-slate-600">sistema_matricula</span></p>
+            <p><i class="fa-solid fa-server mr-1"></i> Spring Boot REST API: <span class="font-semibold text-slate-600">puerto 8080</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: MATRÍCULAS -->
+    <section id="tab-matriculas" class="tab-content hidden">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-800">Listado de Matrículas</h2>
+          <p class="text-sm text-slate-500">Registro histórico de matrículas y control de estado de pagos.</p>
+        </div>
+        <button onclick="switchTab('nueva-matricula')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition flex items-center">
+          <i class="fa-solid fa-plus mr-2"></i> Nueva Matrícula
+        </button>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row gap-3 justify-between items-center bg-slate-50">
+          <div class="relative w-full sm:w-72">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+            <input type="text" id="filtro-matriculas" oninput="filtrarMatriculas()" placeholder="Buscar por código, alumno o DNI..." class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <button onclick="cargarMatriculas()" class="text-sm text-slate-600 hover:text-indigo-600 flex items-center">
+            <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Actualizar
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-600">
+            <thead class="bg-slate-100 text-xs uppercase font-semibold text-slate-600">
+              <tr>
+                <th class="py-3.5 px-4">Código</th>
+                <th class="py-3.5 px-4">Estudiante</th>
+                <th class="py-3.5 px-4">DNI</th>
+                <th class="py-3.5 px-4">Carrera</th>
+                <th class="py-3.5 px-4">Periodo</th>
+                <th class="py-3.5 px-4 text-center">Créditos</th>
+                <th class="py-3.5 px-4">Costo Total</th>
+                <th class="py-3.5 px-4">Estado</th>
+                <th class="py-3.5 px-4 text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="matriculas-tbody" class="divide-y divide-slate-100">
+              <tr><td colspan="9" class="py-6 text-center text-slate-400">Cargando matrículas...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: NUEVA MATRÍCULA -->
+    <section id="tab-nueva-matricula" class="tab-content hidden">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-slate-800">Registrar Nueva Matrícula</h2>
+        <p class="text-sm text-slate-500">Seleccione el estudiante, el periodo académico y las asignaturas deseadas.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Form Left Column -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Step 1: Student and Term -->
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center">
+              <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs mr-2">1</span>
+              Datos del Alumno y Periodo
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Estudiante</label>
+                <select id="select-estudiante" onchange="actualizarInfoEstudiante()" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                  <option value="">Seleccione un estudiante...</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Periodo Académico</label>
+                <select id="select-periodo" onchange="cargarSeccionesDisponibles()" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                  <option value="">Seleccione periodo...</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="estudiante-info-banner" class="hidden mt-4 p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-xs text-indigo-800 flex justify-between">
+              <div>
+                <p><strong>DNI:</strong> <span id="info-dni">--</span> | <strong>Código:</strong> <span id="info-codigo">--</span></p>
+                <p><strong>Carrera:</strong> <span id="info-carrera">--</span></p>
+              </div>
+              <div>
+                <span class="inline-block px-2 py-0.5 bg-emerald-500 text-white rounded font-bold">ACTIVO</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Course Selection -->
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-base font-bold text-slate-800 flex items-center">
+                <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs mr-2">2</span>
+                Secciones Disponibles para Matrícula
+              </h3>
+              <span class="text-xs text-slate-400">Seleccione los cursos a matricular</span>
+            </div>
+
+            <div id="contenedor-secciones" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+              <p class="text-sm text-slate-400 text-center py-6">Seleccione un periodo para cargar las secciones disponibles.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Right Column -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between h-fit sticky top-20">
+          <div>
+            <h3 class="text-base font-bold text-slate-800 mb-4 pb-3 border-b border-slate-200">Resumen de Matrícula</h3>
+
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-500">Cursos seleccionados:</span>
+                <span id="resumen-total-cursos" class="font-bold text-slate-800">0</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-500">Total de Créditos:</span>
+                <span id="resumen-total-creditos" class="font-bold text-indigo-600 text-base">0 cred.</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-500">Costo Matrícula:</span>
+                <span id="resumen-costo-total" class="font-bold text-slate-800 text-lg">S/ 0.00</span>
+              </div>
+            </div>
+
+            <div class="mb-6 pt-4 border-t border-slate-100">
+              <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Método de Pago (Inmediato)</label>
+              <select id="select-metodo-pago" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <option value="EFECTIVO">Efectivo en Caja</option>
+                <option value="TARJETA">Tarjeta Débito / Crédito</option>
+                <option value="YAPE">Yape / Plin</option>
+                <option value="TRANSFERENCIA">Transferencia Bancaria</option>
+              </select>
+              <p class="text-[11px] text-slate-400 mt-1">El comprobante de pago se generará automáticamente.</p>
+            </div>
+          </div>
+
+          <button onclick="confirmarMatricula()" id="btn-confirmar-matricula" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-md transition flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-check"></i>
+            <span>Confirmar y Matricular</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: ESTUDIANTES -->
+    <section id="tab-estudiantes" class="tab-content hidden">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-800">Padrón de Estudiantes</h2>
+          <p class="text-sm text-slate-500">Listado de alumnos matriculados y en condición regular.</p>
+        </div>
+        <button onclick="abrirModalNuevoEstudiante()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition flex items-center">
+          <i class="fa-solid fa-user-plus mr-2"></i> Registrar Alumno
+        </button>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+          <input type="text" id="filtro-estudiantes" oninput="filtrarEstudiantes()" placeholder="Filtrar por nombre, DNI o código..." class="w-full sm:w-80 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <button onclick="cargarEstudiantes()" class="text-sm text-slate-600 hover:text-indigo-600">
+            <i class="fa-solid fa-arrows-rotate mr-1"></i> Refrescar
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-600">
+            <thead class="bg-slate-100 text-xs uppercase font-semibold text-slate-600">
+              <tr>
+                <th class="py-3.5 px-4">Código</th>
+                <th class="py-3.5 px-4">DNI</th>
+                <th class="py-3.5 px-4">Nombres y Apellidos</th>
+                <th class="py-3.5 px-4">Carrera</th>
+                <th class="py-3.5 px-4">Email</th>
+                <th class="py-3.5 px-4">Teléfono</th>
+                <th class="py-3.5 px-4">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="estudiantes-tbody" class="divide-y divide-slate-100">
+              <tr><td colspan="7" class="py-6 text-center text-slate-400">Cargando estudiantes...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: CURSOS -->
+    <section id="tab-cursos" class="tab-content hidden">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-slate-800">Catálogo de Cursos y Malla Curricular</h2>
+        <p class="text-sm text-slate-500">Asignaturas vigentes organizadas por carrera, ciclo y créditos.</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-600">
+            <thead class="bg-slate-100 text-xs uppercase font-semibold text-slate-600">
+              <tr>
+                <th class="py-3.5 px-4">Código</th>
+                <th class="py-3.5 px-4">Nombre de la Asignatura</th>
+                <th class="py-3.5 px-4">Plan de Estudio</th>
+                <th class="py-3.5 px-4 text-center">Ciclo</th>
+                <th class="py-3.5 px-4 text-center">Créditos</th>
+                <th class="py-3.5 px-4 text-center">Horas T/P</th>
+                <th class="py-3.5 px-4">Costo</th>
+                <th class="py-3.5 px-4">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="cursos-tbody" class="divide-y divide-slate-100">
+              <tr><td colspan="8" class="py-6 text-center text-slate-400">Cargando cursos...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: DOCENTES -->
+    <section id="tab-docentes" class="tab-content hidden">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-slate-800">Plana Docente</h2>
+        <p class="text-sm text-slate-500">Catedráticos asignados para el dictado de asignaturas.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="docentes-cards-container">
+        <!-- Tarjetas dinámicas de docentes -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: DETALLES DE MATRÍCULA -->
+  <div id="modal-detalle-matricula" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-150">
+      <div class="bg-indigo-900 text-white px-6 py-4 flex justify-between items-center">
+        <div>
+          <h3 class="font-bold text-lg" id="modal-mat-codigo">Detalle de Matrícula</h3>
+          <p class="text-xs text-indigo-200" id="modal-mat-estudiante">Alumno: --</p>
+        </div>
+        <button onclick="cerrarModalDetalle()" class="text-white hover:text-slate-300 text-xl font-bold">&times;</button>
+      </div>
+      <div class="p-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl mb-4 text-xs">
+          <div><p class="text-slate-400 font-semibold uppercase">DNI</p><p id="modal-mat-dni" class="font-bold text-slate-700">--</p></div>
+          <div><p class="text-slate-400 font-semibold uppercase">Periodo</p><p id="modal-mat-periodo" class="font-bold text-slate-700">--</p></div>
+          <div><p class="text-slate-400 font-semibold uppercase">Créditos</p><p id="modal-mat-creditos" class="font-bold text-indigo-600">--</p></div>
+          <div><p class="text-slate-400 font-semibold uppercase">Costo Total</p><p id="modal-mat-costo" class="font-bold text-emerald-600">--</p></div>
+        </div>
+
+        <h4 class="font-bold text-sm text-slate-700 mb-2">Cursos Inscritos:</h4>
+        <div class="overflow-x-auto border border-slate-200 rounded-lg mb-4">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-100 font-semibold text-slate-600">
+              <tr>
+                <th class="py-2.5 px-3">Código</th>
+                <th class="py-2.5 px-3">Curso</th>
+                <th class="py-2.5 px-3">Sección</th>
+                <th class="py-2.5 px-3">Docente</th>
+                <th class="py-2.5 px-3">Costo</th>
+                <th class="py-2.5 px-3">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="modal-mat-cursos-tbody" class="divide-y divide-slate-100">
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+          <button onclick="cerrarModalDetalle()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-semibold rounded-lg transition">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRAR NUEVO ESTUDIANTE -->
+  <div id="modal-nuevo-estudiante" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden">
+      <div class="bg-indigo-900 text-white px-6 py-4 flex justify-between items-center">
+        <h3 class="font-bold text-lg">Registrar Nuevo Estudiante</h3>
+        <button onclick="cerrarModalNuevoEstudiante()" class="text-white hover:text-slate-300 text-xl font-bold">&times;</button>
+      </div>
+      <form id="form-estudiante" onsubmit="guardarEstudiante(event)" class="p-6 space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">DNI *</label>
+            <input type="text" id="nuevo-dni" required maxlength="8" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Código Estudiante</label>
+            <input type="text" id="nuevo-codigo" placeholder="Autogenerado" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nombres *</label>
+            <input type="text" id="nuevo-nombres" required class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Apellidos *</label>
+            <input type="text" id="nuevo-apellidos" required class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Carrera Profesional *</label>
+          <select id="nuevo-carrera-id" required class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <option value="">Seleccione carrera...</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Email Institucional *</label>
+            <input type="email" id="nuevo-email" required class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Teléfono</label>
+            <input type="text" id="nuevo-telefono" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Dirección</label>
+          <input type="text" id="nuevo-direccion" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+          <button type="button" onclick="cerrarModalNuevoEstudiante()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-semibold rounded-lg transition">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow transition">Guardar Alumno</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-4">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
+      Sistema de Matrícula Académica &bull; Modelo Vista Controlador (MVC) &bull; Spring Boot 4 / MySQL 8.0 &bull; Examen de Aplicaciones
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
