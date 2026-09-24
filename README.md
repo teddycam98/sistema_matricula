@@ -1,10 +1,10 @@
-# 🎓 Sistema de Matrícula Universitaria - Arquitectura MVC
+# Sistema de Matrícula Universitaria - Arquitectura MVC
 
 Sistema integral de gestión de matrículas académicas desarrollado con el patrón arquitectónico **Modelo - Vista - Controlador (MVC)**, implementado en **Java 21**, **Spring Boot 4**, **Spring Data JPA**, **MySQL 8.0** y una interfaz interactiva de usuario **Single Page Application (SPA)** con TailwindCSS y JavaScript Fetch API.
 
 ---
 
-## 🚀 Características Principales
+## Características Principales
 
 - **Mínimo 10 Tablas Relacionales (12 tablas implementadas)**: Totalmente normalizadas (3FN) con llaves primarias, foráneas, índices de unicidad y cascadas de integridad.
 - **Estructura MVC Estricta**:
@@ -24,7 +24,7 @@ Sistema integral de gestión de matrículas académicas desarrollado con el patr
 
 ---
 
-## 📊 Modelo de Datos (12 Tablas)
+## Modelo de Datos (12 Tablas)
 
 El sistema cuenta con 12 tablas en base de datos `sistema_matricula`:
 
@@ -45,7 +45,7 @@ Para ver el diagrama relacional completo en formato Mermaid, consulte [docs/DIAG
 
 ---
 
-## 📂 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 sistema_matricula/
@@ -80,7 +80,7 @@ sistema_matricula/
 
 ---
 
-## ⚙️ Requisitos de Instalación
+## Requisitos de Instalación
 
 - **Java JDK**: Versión 21 o superior.
 - **MySQL Server**: Versión 8.0 o superior (puerto default 3306).
@@ -88,7 +88,7 @@ sistema_matricula/
 
 ---
 
-## 🛠️ Instrucciones de Ejecución
+##  Instrucciones de Ejecución
 
 ### 1. Inicializar la Base de Datos en MySQL
 Ejecute los scripts de la carpeta `database/` en su consola o MySQL Workbench:
@@ -109,7 +109,7 @@ cd backend
 ```
 
 El servidor iniciará en:
-👉 `http://localhost:8080`
+ `http://localhost:8080`
 
 ### 3. Acceder a la Aplicación Web
 Puede usar el sistema de dos formas:
@@ -135,7 +135,7 @@ Puede usar el sistema de dos formas:
 
 ---
 
-## 👥 Datos de Prueba Listos para Demostración
+## Datos de Prueba Listos para Demostración
 
 - **Periodo Académico**: `2026-I` (Activo)
 - **Estudiantes de ejemplo**:
