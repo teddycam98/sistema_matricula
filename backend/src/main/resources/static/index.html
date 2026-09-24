@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans dark-mode">
 
   <!-- Top Navbar -->
   <nav class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
@@ -51,9 +51,13 @@
           </button>
         </div>
 
-        <div class="flex items-center space-x-2">
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500 text-white">
-            <i class="fa-solid fa-circle text-[8px] mr-1 animate-pulse"></i> API Conectada
+        <div class="flex items-center space-x-3">
+          <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-3 py-1.5 rounded-lg bg-indigo-800/80 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center space-x-1.5 transition border border-indigo-700 shadow-sm" title="Cambiar Tema Oscuro/Claro">
+            <i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-300"></i>
+            <span id="theme-toggle-text">Modo Claro</span>
+          </button>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+            <i class="fa-solid fa-circle text-[8px] mr-1.5 text-emerald-400 animate-pulse"></i> API Conectada
           </span>
         </div>
       </div>

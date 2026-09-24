@@ -1,19 +1,30 @@
-/* Estilos personalizados para el Sistema de Matrícula */
+/* ==========================================================================
+   ESTILOS PERSONALIZADOS - SISTEMA DE MATRÍCULA
+   Soporte para Modo Oscuro Azulino / Slate Moderno & Modo Claro
+   ========================================================================== */
 
-.active-tab {
-  background-color: #3730a3 !important; /* Indigo 800 */
-  color: #ffffff !important;
-  font-weight: 600;
+/* Transición suave para todos los cambios de color */
+body, nav, main, footer, div, section, table, tr, th, td, input, select, button {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
+/* Tab activo en la barra de navegación */
+.active-tab {
+  background-color: #4338ca !important; /* Indigo 700 */
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.4);
+}
+
+/* Animación de entrada de pestañas */
 .tab-content {
-  animation: fadeIn 0.25s ease-in-out;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -21,23 +32,155 @@
   }
 }
 
-/* Badge styles */
-.badge-activa {
-  background-color: #dcfce7;
-  color: #15803d;
+/* ==========================================================================
+   TEMA OSCURO AZULINO MODERNO (DEFAULT & CLASS .dark-mode)
+   ========================================================================== */
+body.dark-mode {
+  background: radial-gradient(circle at 10% 20%, #0f172a 0%, #080d1a 50%, #030712 100%) fixed !important;
+  color: #f1f5f9 !important;
 }
 
-.badge-pagada {
-  background-color: #ccfbf1;
-  color: #0f766e;
+body.dark-mode nav {
+  background-color: rgba(11, 17, 32, 0.95) !important;
+  border-bottom: 1px solid #1e293b !important;
+  backdrop-filter: blur(12px);
 }
 
-.badge-confirmada {
-  background-color: #e0e7ff;
-  color: #4338ca;
+/* Tarjetas y Contenedores */
+body.dark-mode .bg-white {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  color: #f8fafc !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
 }
 
-.badge-anulada {
-  background-color: #fee2e2;
-  color: #b91c1c;
+body.dark-mode .bg-slate-50 {
+  background-color: #0b1329 !important;
+  color: #f1f5f9 !important;
+  border-color: #1e293b !important;
+}
+
+body.dark-mode .bg-slate-100 {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+body.dark-mode .bg-slate-200 {
+  background-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Textos */
+body.dark-mode .text-slate-800,
+body.dark-mode .text-slate-900,
+body.dark-mode .text-slate-700 {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Bordes y Divisores */
+body.dark-mode .border-slate-200,
+body.dark-mode .border-slate-300,
+body.dark-mode .border-slate-100 {
+  border-color: #1e293b !important;
+}
+
+body.dark-mode .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+body.dark-mode .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1e293b !important;
+}
+
+/* Formularios: Inputs, Selects y Textareas */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="number"],
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: #0b1120 !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+}
+
+/* Tablas */
+body.dark-mode table thead {
+  background-color: #111c35 !important;
+  color: #94a3b8 !important;
+}
+
+body.dark-mode table thead th {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode table tbody tr:hover {
+  background-color: rgba(30, 41, 59, 0.45) !important;
+}
+
+/* Botones y Hovers */
+body.dark-mode .hover\:bg-indigo-50:hover {
+  background-color: #1e1b4b !important;
+}
+
+body.dark-mode .hover\:bg-slate-200:hover {
+  background-color: #334155 !important;
+}
+
+body.dark-mode .bg-indigo-50 {
+  background-color: #172554 !important;
+  border-color: #1e3a8a !important;
+  color: #93c5fd !important;
+}
+
+body.dark-mode .bg-indigo-50 * {
+  color: #bfdbfe !important;
+}
+
+body.dark-mode .bg-slate-900\/60 {
+  background-color: rgba(2, 6, 23, 0.85) !important;
+}
+
+body.dark-mode .bg-slate-900\/75 {
+  background-color: rgba(2, 6, 23, 0.9) !important;
+}
+
+/* Pie de Página */
+body.dark-mode footer {
+  background-color: #080d1a !important;
+  border-color: #1e293b !important;
+  color: #64748b !important;
+}
+
+/* Scrollbar moderno */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }

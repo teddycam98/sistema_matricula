@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function inicializarApp() {
+  inicializarTema();
   try {
     await Promise.all([
       cargarDashboard(),
@@ -27,6 +28,37 @@ async function inicializarApp() {
     ]);
   } catch (err) {
     console.warn("Error cargando datos iniciales:", err);
+  }
+}
+
+// ==================== TEMA OSCURO / CLARO ====================
+function inicializarTema() {
+  const temaGuardado = localStorage.getItem("sistema_matricula_theme");
+  if (temaGuardado === "light") {
+    aplicarTema(false);
+  } else {
+    aplicarTema(true); // Por defecto modo oscuro azulino moderno
+  }
+}
+
+function toggleTheme() {
+  const esOscuro = document.body.classList.contains("dark-mode");
+  aplicarTema(!esOscuro);
+}
+
+function aplicarTema(oscuro) {
+  const icon = document.getElementById("theme-toggle-icon");
+  const text = document.getElementById("theme-toggle-text");
+  if (oscuro) {
+    document.body.classList.add("dark-mode");
+    localStorage.setItem("sistema_matricula_theme", "dark");
+    if (icon) icon.className = "fa-solid fa-sun text-amber-300";
+    if (text) text.textContent = "Modo Claro";
+  } else {
+    document.body.classList.remove("dark-mode");
+    localStorage.setItem("sistema_matricula_theme", "light");
+    if (icon) icon.className = "fa-solid fa-moon text-amber-300";
+    if (text) text.textContent = "Modo Oscuro";
   }
 }
 
