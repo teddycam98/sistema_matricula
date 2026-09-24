@@ -248,6 +248,8 @@ async function pagarMatricula(id) {
   } catch (err) {
     mostrarToast("Error en la conexión con el servidor", "error");
   }
+}
+
 function imprimirPdfMatricula(id) {
   // Abre directamente el endpoint de JasperReports en una nueva pestaña del navegador
   window.open(`${API_BASE}/reportes/matricula/${id}/pdf`, '_blank');
