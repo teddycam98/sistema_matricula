@@ -1,4 +1,4 @@
-# sistema_matricula
+﻿# sistema_matricula
 # 🎓 Sistema de Matrícula Universitaria - Arquitectura MVC
 
 Sistema integral de gestión de matrículas académicas desarrollado con el patrón arquitectónico **Modelo - Vista - Controlador (MVC)**, implementado en **Java 21**, **Spring Boot 4**, **Spring Data JPA**, **MySQL 8.0** y una interfaz interactiva de usuario **Single Page Application (SPA)** con TailwindCSS y JavaScript Fetch API.
@@ -25,7 +25,7 @@ Sistema integral de gestión de matrículas académicas desarrollado con el patr
 
 ---
 
-## 📊 Modelo de Datos (12 Tablas)
+## 🗄️ Modelo de Datos (12 Tablas)
 
 El sistema cuenta con 12 tablas en base de datos `sistema_matricula`:
 
@@ -46,7 +46,7 @@ Para ver el diagrama relacional completo en formato Mermaid, consulte [docs/DIAG
 
 ---
 
-## 📂 Estructura del Proyecto
+## 📁 Estructura del Proyecto
 
 ```
 sistema_matricula/
@@ -64,9 +64,10 @@ sistema_matricula/
 │   │   └── static/                         <- Frontend integrado servido por Spring Boot
 │   ├── pom.xml                             <- Dependencias Maven
 │   └── mvnw.cmd                            <- Maven Wrapper ejecutable
-├── database/                               <- Scripts SQL
+├── database/                               <- Scripts SQL para MySQL
 │   ├── 01_schema.sql                       <- DDL: Creación de BD y 12 tablas
-│   └── 02_data.sql                         <- DML: Datos iniciales de prueba (Seed)
+│   ├── 02_data.sql                         <- DML: Datos iniciales de prueba (Seed)
+│   └── database_matricula.sql              <- Dump completo (12 tablas + datos) para MySQL
 ├── docs/                                   <- Documentación Técnica
 │   ├── DIAGRAMA_ER.md                      <- Diagrama Entidad-Relación Mermaid
 │   ├── ARQUITECTURA_MVC.md                 <- Documentación técnica del patrón MVC
@@ -76,12 +77,13 @@ sistema_matricula/
 │   ├── index.html                          <- Estructura HTML con TailwindCSS
 │   ├── app.js                              <- Lógica de interacción y llamadas AJAX
 │   └── styles.css                          <- Estilos complementarios
+├── solicitudes.http                        <- Pruebas REST Client / Thunder Client
 └── README.md                               <- Documentación principal
 ```
 
 ---
 
-## ⚙️ Requisitos de Instalación
+## 📋 Requisitos de Instalación
 
 - **Java JDK**: Versión 21 o superior.
 - **MySQL Server**: Versión 8.0 o superior (puerto default 3306).
@@ -89,13 +91,16 @@ sistema_matricula/
 
 ---
 
-## 🛠️ Instrucciones de Ejecución
+## ⚙️ Instrucciones de Ejecución
 
 ### 1. Inicializar la Base de Datos en MySQL
-Ejecute los scripts de la carpeta `database/` en su consola o MySQL Workbench:
+Ejecute el script de la carpeta `database/` en su consola o MySQL Workbench:
 
 ```powershell
-# En consola de comandos o PowerShell:
+# Opción 1: Restaurar el dump completo (Recomendado):
+mysql -u root -p < database/database_matricula.sql
+
+# Opción 2: Ejecutar esquema y datos por separado:
 mysql -u root -p < database/01_schema.sql
 mysql -u root -p < database/02_data.sql
 ```
@@ -136,7 +141,7 @@ Puede usar el sistema de dos formas:
 
 ---
 
-## 👥 Datos de Prueba Listos para Demostración
+## 🧪 Datos de Prueba Listos para Demostración
 
 - **Periodo Académico**: `2026-I` (Activo)
 - **Estudiantes de ejemplo**:
