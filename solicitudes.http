@@ -1,0 +1,37 @@
+﻿### 1. Obtener Estadisticas del Dashboard (GET)
+GET http://localhost:8080/api/dashboard/stats
+
+### 2. Listar todos los estudiantes (GET)
+GET http://localhost:8080/api/estudiantes
+
+### 3. Listar cursos (GET)
+GET http://localhost:8080/api/cursos
+
+### 4. Registrar un nuevo estudiante (POST con JSON)
+POST http://localhost:8080/api/estudiantes
+Content-Type: application/json
+
+{
+  "carrera": { "id": 1 },
+  "dni": "78912345",
+  "codigoEstudiante": "EST-2026-009",
+  "nombres": "Juan Carlos",
+  "apellidos": "Perez Gomez",
+  "email": "juan.perez@alumno.edu.pe",
+  "telefono": "987654321",
+  "estado": "ACTIVO"
+}
+
+### 5. REGISTRO COMPLEJO: Matricula Multitabla (POST con JSON - Tablas Combinadas)
+POST http://localhost:8080/api/matriculas
+Content-Type: application/json
+
+{
+  "estudianteId": 6,
+  "periodoId": 1,
+  "seccionIds": [1, 3],
+  "metodoPago": "YAPE"
+}
+
+### 6. ELIMINAR REGISTRO COMPLEJO: Eliminar Matricula y Restaurar Vacantes (DELETE)
+DELETE http://localhost:8080/api/matriculas/6
